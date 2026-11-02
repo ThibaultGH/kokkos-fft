@@ -63,10 +63,10 @@ KOKKOS_IMPL_DEVICE_FUNCTION kokkosfftCallbackLoadD d_load_callback_symbol_fp64 =
     pad_load_callback<KokkosFFT::fft_data_type<double>>;
 KOKKOS_IMPL_DEVICE_FUNCTION kokkosfftCallbackLoadC
     d_load_callback_symbol_complex_fp32 =
-        pad_load_callback<KokkosFFT::fft_data_type<Kokkos::complex<float>>>;
+        pad_load_callback<Kokkos::complex<float>>;
 KOKKOS_IMPL_DEVICE_FUNCTION kokkosfftCallbackLoadZ
     d_load_callback_symbol_complex_fp64 =
-        pad_load_callback<KokkosFFT::fft_data_type<Kokkos::complex<double>>>;
+        pad_load_callback<Kokkos::complex<double>>;
 
 // Store-callback counterpart: only write within original_size, leaving the
 // padding region alone. Normalization is handled by KokkosFFT's own
@@ -99,10 +99,10 @@ KOKKOS_IMPL_DEVICE_FUNCTION kokkosfftCallbackStoreD
         crop_store_callback<KokkosFFT::fft_data_type<double>>;
 KOKKOS_IMPL_DEVICE_FUNCTION kokkosfftCallbackStoreC
     d_store_callback_symbol_complex_fp32 =
-        crop_store_callback<KokkosFFT::fft_data_type<Kokkos::complex<float>>>;
+        crop_store_callback<Kokkos::complex<float>>;
 KOKKOS_IMPL_DEVICE_FUNCTION kokkosfftCallbackStoreZ
     d_store_callback_symbol_complex_fp64 =
-        crop_store_callback<KokkosFFT::fft_data_type<Kokkos::complex<double>>>;
+        crop_store_callback<Kokkos::complex<double>>;
 
 // Minimal scale callbacks, used only to exercise the one-load/one-store-per
 // -plan precondition below (not the zero-padding use case above). A plan's
@@ -132,15 +132,14 @@ KOKKOS_IMPL_DEVICE_FUNCTION void scale_store_callback(void* dataOut,
                                                       void* callerInfo,
                                                       void* /*sharedPointer*/) {
   auto* p = static_cast<ScaleParams*>(callerInfo);
-  element.x *= p->scale;
-  element.y *= p->scale;
+  element *= p->scale;
   static_cast<T*>(dataOut)[offset] = element;
 }
 
 KOKKOS_IMPL_DEVICE_FUNCTION kokkosfftCallbackStoreC d_scale_store_fp32 =
-    scale_store_callback<KokkosFFT::fft_data_type<Kokkos::complex<float>>>;
+    scale_store_callback<Kokkos::complex<float>>;
 KOKKOS_IMPL_DEVICE_FUNCTION kokkosfftCallbackStoreZ d_scale_store_fp64 =
-    scale_store_callback<KokkosFFT::fft_data_type<Kokkos::complex<double>>>;
+    scale_store_callback<Kokkos::complex<double>>;
 
 // Value of the i-th input sample: a ramp for real data, a ramp with a
 // non-trivial imaginary part for complex data.
